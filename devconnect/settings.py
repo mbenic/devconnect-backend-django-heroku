@@ -53,7 +53,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://deconnect-frontend.vercel.app/"
+    "https://deconnect-frontend.vercel.app"
 ]
 
 
