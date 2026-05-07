@@ -1,0 +1,38 @@
+# Environments
+venv/
+devcon_env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# VS Code
+.vscode/
+
+# Django
+staticfiles/
+
+# Environment variables
+.env
+
+# Misc
+start.txt
+
+#requirements
+requirements-old.txt
+pip freeze requirements.txt
+
+venv/
+__pycache__/
+*.sqlite3
+*.vscode
+
+pip freeze requirements.txt
+text.txt
+
