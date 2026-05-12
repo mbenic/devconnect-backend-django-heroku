@@ -59,15 +59,38 @@ class DeveloperViewSet(viewsets.ModelViewSet):
     # def perform_create(self, serializer):
     #     serializer.save(user=self.request.user) OLD WAY, this would throw an error if a developer profile already exists for the user, which is not ideal since we want to allow users to update their profile without having to delete and recreate it. The new way below checks if a developer profile already exists for the user and reuses it if it does, otherwise it creates a new one. This way we can avoid the error and also allow users to update their profile without having to delete and recreate it.
         
-    def perform_create(self, serializer): # this is where we link the developer profile to the user who created it
-        user = self.request.user
+    # def perform_create(self, serializer): # this is where we link the developer profile to the user who created it
+    #     user = self.request.user
 
-        developer, created = Developer.objects.get_or_create( 
-            user=user, 
-            defaults=serializer.validated_data
-        ) # if a developer profile already exists for this user, silently reuses existing, but it does not update fields
+    #     developer, created = Developer.objects.get_or_create( 
+    #         user=user, 
+    #         defaults=serializer.validated_data
+    #     ) # if a developer profile already exists for this user, silently reuses existing, but it does not update fields
 
-        serializer.instance = developer
+    #     serializer.instance = developer
+
+def perform_create(self, serializer):
+
+    user = self.request.user
+
+    validated_data = serializer.validated_data.copy()
+
+    skills = validated_data.pop("skills", [])
+
+    developer, created = Developer.objects.get_or_create(
+        user=user,
+        defaults=validated_data
+    )
+
+    if not created:
+        for attr, value in validated_data.items():
+            setattr(developer, attr, value)
+
+        developer.save()
+
+    developer.skills.set(skills)
+
+    serializer.instance = developer
 
 
 
