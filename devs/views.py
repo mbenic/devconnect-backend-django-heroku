@@ -69,24 +69,53 @@ class DeveloperViewSet(viewsets.ModelViewSet):
 
     #     serializer.instance = developer
 
-    def perform_create(self, serializer):
+    # def perform_create(self, serializer):
 
+    #     user = self.request.user
+
+    #     validated_data = serializer.validated_data.copy()
+
+    #     skills = validated_data.pop("skills", [])
+
+    #     developer, created = Developer.objects.get_or_create(
+    #         user=user
+    #     )
+
+    #     for attr, value in validated_data.items():
+    #         setattr(developer, attr, value)
+
+    #     developer.save()
+
+    #     developer.skills.set(skills)
+
+    #     serializer.instance = developer
+    
+    def perform_create(self, serializer):
         user = self.request.user
 
         validated_data = serializer.validated_data.copy()
 
         skills = validated_data.pop("skills", [])
+        industries = validated_data.pop("industries", [])
+        vibes = validated_data.pop("vibes", [])
 
-        developer, created = Developer.objects.get_or_create(
-            user=user
-        )
+        developer, created = Developer.objects.get_or_create(user=user)
 
+        # normal fields only
         for attr, value in validated_data.items():
             setattr(developer, attr, value)
 
         developer.save()
 
-        developer.skills.set(skills)
+        # M2M fields must use .set()
+        if skills:
+            developer.skills.set(skills)
+
+        if industries:
+            developer.industries.set(industries)
+
+        if vibes:
+            developer.vibes.set(vibes)
 
         serializer.instance = developer
 
