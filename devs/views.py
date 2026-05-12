@@ -69,26 +69,26 @@ class DeveloperViewSet(viewsets.ModelViewSet):
 
     #     serializer.instance = developer
 
-def perform_create(self, serializer):
+    def perform_create(self, serializer):
 
-    user = self.request.user
+        user = self.request.user
 
-    validated_data = serializer.validated_data.copy()
+        validated_data = serializer.validated_data.copy()
 
-    skills = validated_data.pop("skills", [])
+        skills = validated_data.pop("skills", [])
 
-    developer, created = Developer.objects.get_or_create(
-        user=user
-    )
+        developer, created = Developer.objects.get_or_create(
+            user=user
+        )
 
-    for attr, value in validated_data.items():
-        setattr(developer, attr, value)
+        for attr, value in validated_data.items():
+            setattr(developer, attr, value)
 
-    developer.save()
+        developer.save()
 
-    developer.skills.set(skills)
+        developer.skills.set(skills)
 
-    serializer.instance = developer
+        serializer.instance = developer
 
 
 
