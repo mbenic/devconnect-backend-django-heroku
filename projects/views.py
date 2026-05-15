@@ -1,13 +1,5 @@
-from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
-
-from devs.models import Skill, Industry, SkillCategory, Vibe
-from devs.serializers import SkillSerializer 
 
 
 from .models import Project
@@ -15,6 +7,19 @@ from .serializers import ProjectWriteSerializer, ProjectReadSerializer
 
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework import permissions
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+
+        # Allow read-only requests
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Only owner can edit/delete
+        return obj.owner == request.user
+    
 
 # class ProjectListView(generics.ListAPIView):
 #     queryset = Project.objects.all().select_related("owner")
@@ -46,7 +51,9 @@ from rest_framework.viewsets import ModelViewSet
 
 # --- EXTRA VIEWS FOR FRONTEND FORMS ---
 class ProjectViewSet(ModelViewSet):
-    queryset = Project.objects.all()
+    # queryset = Project.objects.all()
+    queryset = Project.objects.all().select_related("owner").prefetch_related("industries", "skills_needed")
+    permission_classes = [IsOwnerOrReadOnly]
 
     filter_backends = [DjangoFilterBackend, SearchFilter]
 

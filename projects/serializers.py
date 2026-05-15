@@ -103,6 +103,7 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
+            "id",
             "title",
             "description",
             "city",
@@ -114,6 +115,35 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
             "industries",
         ]
 
+    # # 🔧 Explicit create (safe + clear)
+    #     def create(self, validated_data):
+    #         skills = validated_data.pop("skills_needed", [])
+    #         industries = validated_data.pop("industries", [])
+
+    #         project = Project.objects.create(**validated_data)
+
+    #         project.skills_needed.set(skills)
+    #         project.industries.set(industries)
+
+    #         return project
+
+    #     # 🔧 Explicit update
+    #     def update(self, instance, validated_data):
+    #         skills = validated_data.pop("skills_needed", None)
+    #         industries = validated_data.pop("industries", None)
+
+    #         for attr, value in validated_data.items():
+    #             setattr(instance, attr, value)
+
+    #         instance.save()
+
+    #         if skills is not None:
+    #             instance.skills_needed.set(skills)
+
+    #         if industries is not None:
+    #             instance.industries.set(industries)
+
+    #         return instance
 
 
 class ProjectReadSerializer(serializers.ModelSerializer):
@@ -139,19 +169,19 @@ class ProjectReadSerializer(serializers.ModelSerializer):
 
             "owner",
 
-            #"city",
+            "city",
             "city_display",
 
-            #"type",
+            "type",
             "type_display",
 
-            #"budget",
+            "budget",
             "budget_display",
 
-            #"timeline",
+            "timeline",
             "timeline_display",
 
-            #"stage",
+            "stage",
             "stage_display",
 
             "skills",
@@ -161,32 +191,4 @@ class ProjectReadSerializer(serializers.ModelSerializer):
         ]
 
 
-    # 🔧 Explicit create (safe + clear)
-    def create(self, validated_data):
-        skills = validated_data.pop("skills_needed", [])
-        industries = validated_data.pop("industries", [])
-
-        project = Project.objects.create(**validated_data)
-
-        project.skills_needed.set(skills)
-        project.industries.set(industries)
-
-        return project
-
-    # 🔧 Explicit update
-    def update(self, instance, validated_data):
-        skills = validated_data.pop("skills_needed", None)
-        industries = validated_data.pop("industries", None)
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        instance.save()
-
-        if skills is not None:
-            instance.skills_needed.set(skills)
-
-        if industries is not None:
-            instance.industries.set(industries)
-
-        return instance
+    

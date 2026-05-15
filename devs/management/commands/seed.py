@@ -51,8 +51,8 @@ class Command(BaseCommand):
         Developer.objects.all().delete()
         User.objects.all().delete()
 
-        Skill.objects.all().delete()
-        SkillCategory.objects.all().delete()
+        # Skill.objects.all().delete()
+        # SkillCategory.objects.all().delete()
 
 
         # -------------------------
@@ -100,8 +100,10 @@ class Command(BaseCommand):
             "I'm obsessed with clean code",]
 
         # skill_objs = [Skill.objects.get_or_create(name=s)[0] for s in skills]
+        # this old code became incomplete because we moved to a structure where skills are nested under categories, so now we need to get all skill objects after we've created them from the SKILL_CATEGORIES structure above. This way we can ensure that we have the correct skill objects to assign to developers and projects later on.
 
         skill_objs = list(Skill.objects.all())
+        # fetches the already-created skills from the database so i can attach them to developers/projects:
 
         industry_objs = [Industry.objects.get_or_create(name=i)[0] for i in industries]
         vibe_objs = [Vibe.objects.get_or_create(name=v)[0] for v in vibes]
